@@ -4,7 +4,7 @@
 #define MAX_LENGTH 100
 
 // Function to swap two strings using pointers
-void swapStrings(char *str1, char *str2) {
+void swapStrings(char **str1, char **str2) {
     char *temp = *str1;
     *str1 = *str2;
     *str2 = temp;
