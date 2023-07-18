@@ -1,28 +1,18 @@
 import socket
-import threading
 
 def start_client():
-    client_socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+    host = '127.0.0.1'
+    port = 12345
 
-    def receive_messages():
-        while True:
-            data, _ = client_socket.recvfrom(1024)
-            data = data.decode('utf-8')
-            if not data:
-                break
-            print("Server:", data)
-
-    receive_thread = threading.Thread(target=receive_messages)
-    receive_thread.start()
+    client = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
 
     while True:
-        message = input()
-        if message.lower() == 'exit':
-            break
+        message = input("Your message: ").encode('utf-8')
+        client.sendto(message, (host, port))
+        response, server_address = client.recvfrom(1024)
+        print(f"Received from server at {server_address[0]}:{server_address[1]}: {response.decode('utf-8')}")
 
-        client_socket.sendto(message.encode('utf-8'), ('localhost', 12345))
+    client.close()
 
-    client_socket.close()
-
-if __name__ == "__main__":
+if _name_ == "_main_":
     start_client()
