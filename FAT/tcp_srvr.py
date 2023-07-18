@@ -1,29 +1,28 @@
 import socket
 
-def handle_client(client_socket):
+def start_server():
+    host = '127.0.0.1'
+    port = 12345
+
+    server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    server.bind((host, port))
+    server.listen(5)
+
+    print(f"Server listening on {host}:{port}")
+
+    client_socket, addr = server.accept()
+    print(f"Accepted connection from {addr[0]}:{addr[1]}")
+
     while True:
-        data = client_socket.recv(1024).decode('utf-8')
-        if not data:
+        message = client_socket.recv(1024).decode('utf-8')
+        if not message:
             break
-
-        print("Client:", data)
-
-        response = input("Server response: ")
+        print(f"Received from client: {message}")
+        response = input("Your response: ")
         client_socket.send(response.encode('utf-8'))
 
     client_socket.close()
+    server.close()
 
-def start_server():
-    server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-    server_socket.bind(('localhost', 12345))
-    server_socket.listen(5)
-    print("Server is listening on localhost:12345")
-
-    while True:
-        client_socket, client_address = server_socket.accept()
-        print("Connected to:", client_address)
-
-        handle_client(client_socket)
-
-if __name__ == "__main__":
+if _name_ == "_main_":
     start_server()
